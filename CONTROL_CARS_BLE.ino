@@ -7,8 +7,6 @@ int int4 = 7;
 int enb = 5;
 
 char data = "";
-unsigned long startTime = 0;
-bool motorRunning = false;
 
 void setup() {
   pinMode(int1, OUTPUT);
@@ -26,15 +24,9 @@ void loop() {
   if (Serial.available() > 0) {
     data = Serial.read();
     Serial.print(data);
-    
-    if (data == '1' || data == '0') {
-      motorRunning = true;
-      startTime = millis();  // Record the time the motor starts running
-    }
-  }
 
-  if (motorRunning) {
-    if (data == '1') {
+    if (data == 'F') {
+      // Move forward
       digitalWrite(int1, LOW);
       digitalWrite(int2, HIGH);
       analogWrite(ena, 255);
@@ -42,7 +34,9 @@ void loop() {
       digitalWrite(int3, LOW);
       digitalWrite(int4, HIGH);
       analogWrite(enb, 255);
-    } else if (data == '0') {
+    } 
+    else if (data == 'B') {
+      // Move backward
       digitalWrite(int1, HIGH);
       digitalWrite(int2, LOW);
       analogWrite(ena, 255);
@@ -50,12 +44,30 @@ void loop() {
       digitalWrite(int3, HIGH);
       digitalWrite(int4, LOW);
       analogWrite(enb, 255);
-    }
+    } 
+    else if (data == 'L') {
+      // Turn left
+      digitalWrite(int1, LOW);
+      digitalWrite(int2, HIGH);
+      analogWrite(ena, 255);
 
-    // Check if 2 minutes (120,000 milliseconds) have passed
-    if (millis() - startTime >= 2000) {
-      stopMotor();  // Stop the motor after 2 minutes
-      motorRunning = false;
+      digitalWrite(int3, HIGH);
+      digitalWrite(int4, LOW);
+      analogWrite(enb, 255);
+    } 
+    else if (data == 'R') {
+      // Turn right
+      digitalWrite(int1, HIGH);
+      digitalWrite(int2, LOW);
+      analogWrite(ena, 255);
+
+      digitalWrite(int3, LOW);
+      digitalWrite(int4, HIGH);
+      analogWrite(enb, 255);
+    } 
+    else if (data == 'S') {
+      // Stop the motor
+      stopMotor();
     }
   }
 }
@@ -69,6 +81,78 @@ void stopMotor() {
   digitalWrite(int4, LOW);
   analogWrite(enb, 0);
 }
+
+// int int1 = 8;
+// int int2 = 9;
+// int ena = 10;
+
+// int int3 = 6;
+// int int4 = 7;
+// int enb = 5;
+
+// char data = "";
+// unsigned long startTime = 0;
+// bool motorRunning = false;
+
+// void setup() {
+//   pinMode(int1, OUTPUT);
+//   pinMode(int2, OUTPUT);
+//   pinMode(ena, OUTPUT);
+
+//   pinMode(int3, OUTPUT);
+//   pinMode(int4, OUTPUT);
+//   pinMode(enb, OUTPUT);
+
+//   Serial.begin(9600);
+// }
+
+// void loop() {
+//   if (Serial.available() > 0) {
+//     data = Serial.read();
+//     Serial.print(data);
+    
+//     if (data == '1' || data == '0') {
+//       motorRunning = true;
+//       startTime = millis();  // Record the time the motor starts running
+//     }
+//   }
+
+//   if (motorRunning) {
+//     if (data == '1') {
+//       digitalWrite(int1, LOW);
+//       digitalWrite(int2, HIGH);
+//       analogWrite(ena, 255);
+
+//       digitalWrite(int3, LOW);
+//       digitalWrite(int4, HIGH);
+//       analogWrite(enb, 255);
+//     } else if (data == '0') {
+//       digitalWrite(int1, HIGH);
+//       digitalWrite(int2, LOW);
+//       analogWrite(ena, 255);
+
+//       digitalWrite(int3, HIGH);
+//       digitalWrite(int4, LOW);
+//       analogWrite(enb, 255);
+//     }
+
+//     // Check if 2 minutes (120,000 milliseconds) have passed
+//     if (millis() - startTime >= 2000) {
+//       stopMotor();  // Stop the motor after 2 minutes
+//       motorRunning = false;
+//     }
+//   }
+// }
+
+// void stopMotor() {
+//   digitalWrite(int1, LOW);
+//   digitalWrite(int2, LOW);
+//   analogWrite(ena, 0);
+
+//   digitalWrite(int3, LOW);
+//   digitalWrite(int4, LOW);
+//   analogWrite(enb, 0);
+// }
 
 
 // int int1 = 8;
